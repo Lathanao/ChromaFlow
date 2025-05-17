@@ -2,7 +2,7 @@
 
 ![ChromaFlow Demo](image.png)
 
-## 🌈 About
+## 🚀 About
 
 ChromaFlow is an open-source web tool for generating beautiful gradient color palettes with Pantone-inspired color names. Built in just 2 hours during a live coding session, this project aims to provide designers and developers with an easy way to discover stunning color combinations.
 
