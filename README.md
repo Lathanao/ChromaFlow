@@ -33,9 +33,3 @@ This is a pure frontend project built with:
 - CSS3 (with modern features like `backdrop-filter`)
 - Vanilla JavaScript
 
-### Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/chromaflow.git
-
