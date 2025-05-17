@@ -7,7 +7,7 @@
 ChromaFlow is an open-source web tool for generating beautiful gradient color palettes with Pantone-inspired color names. Built in just 2 hours during a live coding session, this project aims to provide designers and developers with an easy way to discover stunning color combinations.
 
 All color names are AI-generated and inspired by:
-- Pantone color library
+- Pantone-inspired color library
 - Brand colors
 - Natural elements
 - Creative associations
@@ -17,16 +17,14 @@ All color names are AI-generated and inspired by:
 - Generates random gradient palettes with 5 color combinations
 - Displays hex codes for easy copying
 - Provides Pantone-inspired color names
-- Responsive design works on all devices
 - Copy color codes with one click
 - Infinite scroll loads more palettes as you browse
 
 ## 🚀 Usage
 
-1. Visit the [live demo](#) *(add your deployment link here)*
+1. [Visit the page](http://lathanao.github.io/ChromaFlow)
 2. Scroll to generate more palettes automatically
-3. Click the "Generate Palettes" button to add more
-4. Click any hex code to copy it to your clipboard
+3. Click any hex code to copy it to your clipboard
 
 ## 🛠️ Development
 
