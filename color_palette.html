@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>4096 Color Palette</title>
+        <style>
+            :root {
+                --primary: #3b82f6;
+                --primary-hover: #2563eb;
+                --bg: #f8fafc;
+                --text: #1e293b;
+                --card: #ffffff;
+                --border: #e2e8f0;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--bg);
+                color: var(--text);
+                line-height: 1.6;
+                padding: 20px;
+            }
+
+            .container {
+                max-width: 1600px;
+                margin: 0 auto;
+            }
+
+            header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                color: var(--text);
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+                color: #64748b;
+                margin-bottom: 20px;
+            }
+
+            .controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .sort-control {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            label {
+                font-weight: 600;
+            }
+
+            select,
+            button {
+                padding: 8px 16px;
+                border-radius: 6px;
+                border: 1px solid var(--border);
+                background-color: var(--card);
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            select:hover,
+            button:hover {
+                border-color: #cbd5e1;
+            }
+
+            select:focus,
+            button:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            }
+
+            .color-grid {
+                display: grid;
+                grid-template-columns: repeat(16, 1fr);
+                gap: 10px;
+                margin-bottom: 30px;
+            }
+
+            .color-card {
+                background-color: var(--card);
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                transition: transform 0.2s, box-shadow 0.2s;
+                cursor: pointer;
+            }
+
+            .color-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .color-swatch {
+                height: 80px;
+                width: 100%;
+            }
+
+            .color-info {
+                padding: 8px;
+                text-align: center;
+            }
+
+            .color-hex {
+                font-family: monospace;
+                font-size: 0.9rem;
+                margin-bottom: 4px;
+            }
+
+            .color-name {
+                font-size: 0.75rem;
+                color: #64748b;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 15px;
+                margin-top: 30px;
+            }
+
+            .page-info {
+                font-size: 1rem;
+            }
+
+            .btn {
+                background-color: var(--primary);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+            .btn:hover {
+                background-color: var(--primary-hover);
+            }
+
+            .btn:disabled {
+                background-color: #cbd5e1;
+                cursor: not-allowed;
+            }
+
+            .copy-message {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #10b981;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 6px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: opacity 0.3s, transform 0.3s;
+            }
+
+            .copy-message.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            footer {
+                text-align: center;
+                margin-top: 50px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border);
+                color: #64748b;
+            }
+
+            @media (max-width: 1400px) {
+                .color-grid {
+                    grid-template-columns: repeat(12, 1fr);
+                }
+            }
+
+            @media (max-width: 1100px) {
+                .color-grid {
+                    grid-template-columns: repeat(8, 1fr);
+                }
+            }
+
+            @media (max-width: 768px) {
+                .color-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+
+                .controls {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <h1>4096 Color Palette</h1>
+                <p class="subtitle">All possible colors with format #00RRGGBB where RR, GG, BB are the same digit pairs
+                </p>
+            </header>
+
+            <div class="controls">
+                <div class="sort-control">
+                    <label for="sort-method">Sort by:</label>
+                    <select id="sort-method">
+                        <option value="hue">Hue</option>
+                        <option value="saturation">Saturation</option>
+                        <option value="lightness">Lightness</option>
+                        <option value="red">Red</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                    </select>
+                </div>
+
+                <div class="display-control">
+                    <label for="colors-per-page">Colors per page:</label>
+                    <select id="colors-per-page">
+                        <option value="64">64</option>
+                        <option value="128">128</option>
+                        <option value="256" selected>256</option>
+                        <option value="512">512</option>
+                        <option value="1024">1024</option>
+                        <option value="4096">All (4096)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="color-grid" class="color-grid">
+                <!-- Colors will be inserted here -->
+            </div>
+
+            <div class="pagination">
+                <button id="prev-btn" class="btn" disabled>Previous</button>
+                <div id="page-info" class="page-info">Page 1 of 16</div>
+                <button id="next-btn" class="btn">Next</button>
+            </div>
+
+            <footer>
+                <p>Click on any color to copy its hex code to clipboard</p>
+            </footer>
+        </div>
+
+        <div id="copy-message" class="copy-message">Copied to clipboard!</div>
+
+        <script>
+            // Generate all 4096 colors
+            function generateColors() {
+                const colors = [];
+                for (let r = 0; r < 16; r++) {
+                    for (let g = 0; g < 16; g++) {
+                        for (let b = 0; b < 16; b++) {
+                            const hex = `#00${r.toString(16)}${r.toString(16)}${g.toString(16)}${g.toString(16)}${b.toString(16)}${b.toString(16)}`;
+
+                            // Convert to RGB - fixed to handle 8-digit hex codes
+                            const rgb = hexToRgb(hex);
+
+                            // Convert to HSL
+                            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+                            colors.push({
+                                hex,
+                                rgb,
+                                hsl,
+                                name: generateColorName(r, g, b)
+                            });
+                        }
+                    }
+                }
+                return colors;
+            }
+
+            // Convert hex to RGB - FIXED to handle 8-digit hex codes
+            function hexToRgb(hex) {
+                // Extract the last 6 digits for RGB values
+                const rgbHex = hex.slice(-6);
+                const r = parseInt(rgbHex.slice(0, 2), 16);
+                const g = parseInt(rgbHex.slice(2, 4), 16);
+                const b = parseInt(rgbHex.slice(4, 6), 16);
+
+                return { r, g, b };
+            }
+
+            // Convert RGB to HSL
+            function rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+
+                if (max === min) {
+                    h = s = 0; // achromatic
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                        default: h = 0;
+                    }
+
+                    h /= 6;
+                }
+
+                return { h, s, l };
+            }
+
+            // Generate a color name
+            function generateColorName(r, g, b) {
+                const hexChars = '0123456789ABCDEF';
+
+                // Color name components
+                const hueNames = [
+                    'Red', 'Orange', 'Yellow', 'Chartreuse', 'Green',
+                    'Spring', 'Cyan', 'Azure', 'Blue', 'Violet',
+                    'Magenta', 'Rose', 'Crimson', 'Rust', 'Brown', 'Gray'
+                ];
+
+                // Calculate a hue index based on the color values
+                const hueIndex = Math.floor((r * 4 + g * 2 + b) % 16);
+
+                // Calculate intensity
+                const intensity = r + g + b;
+                let intensityName = '';
+
+                if (intensity < 6) intensityName = 'Deep';
+                else if (intensity < 12) intensityName = 'Dark';
+                else if (intensity < 24) intensityName = 'Medium';
+                else if (intensity < 36) intensityName = 'Bright';
+                else intensityName = 'Light';
+
+                return `${intensityName} ${hueNames[hueIndex]} ${hexChars[r]}${hexChars[g]}${hexChars[b]}`;
+            }
+
+            // Sort colors based on selected method
+            function sortColors(colors, method) {
+                switch (method) {
+                    case 'hue':
+                        return [...colors].sort((a, b) => a.hsl.h - b.hsl.h);
+                    case 'saturation':
+                        return [...colors].sort((a, b) => a.hsl.s - b.hsl.s);
+                    case 'lightness':
+                        return [...colors].sort((a, b) => a.hsl.l - b.hsl.l);
+                    case 'red':
+                        return [...colors].sort((a, b) => a.rgb.r - b.rgb.r);
+                    case 'green':
+                        return [...colors].sort((a, b) => a.rgb.g - b.rgb.g);
+                    case 'blue':
+                        return [...colors].sort((a, b) => a.rgb.b - b.rgb.b);
+                    default:
+                        return colors;
+                }
+            }
+
+            // Create color card element
+            function createColorCard(color) {
+                const card = document.createElement('div');
+                card.className = 'color-card';
+                card.setAttribute('data-hex', color.hex);
+
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = color.hex;
+
+                const info = document.createElement('div');
+                info.className = 'color-info';
+
+                const hexText = document.createElement('div');
+                hexText.className = 'color-hex';
+                hexText.textContent = color.hex;
+
+                const nameText = document.createElement('div');
+                nameText.className = 'color-name';
+                nameText.textContent = color.name;
+                nameText.title = color.name;
+
+                info.appendChild(hexText);
+                info.appendChild(nameText);
+
+                card.appendChild(swatch);
+                card.appendChild(info);
+
+                // Add click event to copy hex code
+                card.addEventListener('click', () => {
+                    navigator.clipboard.writeText(color.hex).then(() => {
+                        showCopyMessage();
+                    });
+                });
+
+                return card;
+            }
+
+            // Show copy message
+            function showCopyMessage() {
+                const message = document.getElementById('copy-message');
+                message.classList.add('show');
+
+                setTimeout(() => {
+                    message.classList.remove('show');
+                }, 2000);
+            }
+
+            // Render colors to the grid
+            function renderColors(colors, page, colorsPerPage) {
+                const grid = document.getElementById('color-grid');
+                grid.innerHTML = '';
+
+                const startIndex = (page - 1) * colorsPerPage;
+                const endIndex = Math.min(startIndex + colorsPerPage, colors.length);
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const card = createColorCard(colors[i]);
+                    grid.appendChild(card);
+                }
+            }
+
+            // Update pagination info
+            function updatePagination(page, totalPages) {
+                document.getElementById('page-info').textContent = `Page ${page} of ${totalPages}`;
+                document.getElementById('prev-btn').disabled = page === 1;
+                document.getElementById('next-btn').disabled = page === totalPages;
+            }
+
+            // Initialize the app
+            function init() {
+                const allColors = generateColors();
+                let sortMethod = 'hue';
+                let currentPage = 1;
+                let colorsPerPage = 256;
+
+                // Sort colors initially
+                let sortedColors = sortColors(allColors, sortMethod);
+
+                // Calculate total pages
+                let totalPages = Math.ceil(sortedColors.length / colorsPerPage);
+
+                // Render initial colors
+                renderColors(sortedColors, currentPage, colorsPerPage);
+                updatePagination(currentPage, totalPages);
+
+                // Sort method change event
+                document.getElementById('sort-method').addEventListener('change', (e) => {
+                    sortMethod = e.target.value;
+                    sortedColors = sortColors(allColors, sortMethod);
+                    currentPage = 1;
+                    renderColors(sortedColors, currentPage, colorsPerPage);
+                    updatePagination(currentPage, totalPages);
+                });
+
+                // Colors per page change event
+                document.getElementById('colors-per-page').addEventListener('change', (e) => {
+                    colorsPerPage = parseInt(e.target.value);
+                    totalPages = Math.ceil(sortedColors.length / colorsPerPage);
+                    currentPage = 1;
+                    renderColors(sortedColors, currentPage, colorsPerPage);
+                    updatePagination(currentPage, totalPages);
+                });
+
+                // Previous page button
+                document.getElementById('prev-btn').addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderColors(sortedColors, currentPage, colorsPerPage);
+                        updatePagination(currentPage, totalPages);
+                        window.scrollTo(0, 0);
+                    }
+                });
+
+                // Next page button
+                document.getElementById('next-btn').addEventListener('click', () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderColors(sortedColors, currentPage, colorsPerPage);
+                        updatePagination(currentPage, totalPages);
+                        window.scrollTo(0, 0);
+                    }
+                });
+            }
+
+            // Start the app when DOM is loaded
+            document.addEventListener('DOMContentLoaded', init);
+        </script>
+    </body>
+
+</html>
